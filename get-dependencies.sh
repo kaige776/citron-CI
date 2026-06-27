@@ -27,7 +27,6 @@ pacman -Syu --noconfirm --needed \
 	lld                 \
 	llvm                \
 	rapidjson           \
-	mbedtls2            \
 	mesa                \
 	nasm                \
 	ninja               \
