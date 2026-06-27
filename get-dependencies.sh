@@ -27,13 +27,13 @@ pacman -Syu --noconfirm --needed \
 	lld                 \
 	llvm                \
 	rapidjson           \
-	mbedtls2            \
 	mesa                \
 	nasm                \
 	ninja               \
 	nlohmann-json       \
 	numactl             \
 	openal              \
+	patchelf            \
 	pulseaudio          \
 	pulseaudio-alsa     \
 	qt6-networkauth     \
