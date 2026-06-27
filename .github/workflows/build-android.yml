@@ -172,6 +172,25 @@ jobs:
           sdkmanager "platform-tools" "platforms;android-34" "build-tools;34.0.0" "ndk;26.1.10909125"
           echo "ANDROID_NDK_HOME=$ANDROID_HOME/ndk/26.1.10909125" >> $GITHUB_ENV
 
+      - name: Bootstrap vcpkg and install OpenSSL (arm64-android)
+        run: |
+          set -euo pipefail
+          # 使用仓库内的 vcpkg（如果存在），否则克隆一个浅拷贝
+          VCPKG_DIR="./citron_source/externals/vcpkg"
+          if [ ! -d "$VCPKG_DIR" ]; then
+            mkdir -p ./citron_source/externals
+            git clone --depth=1 https://github.com/microsoft/vcpkg.git "$VCPKG_DIR"
+          fi
+          pushd "$VCPKG_DIR"
+          ./bootstrap-vcpkg.sh
+          # 为 Android arm64 三元组安装 OpenSSL
+          ./vcpkg install openssl:arm64-android
+          popd
+          # 导出 triplet 环境变量，供后续 CMake/Gradle 使用
+          echo "VCPKG_DEFAULT_TRIPLET=arm64-android" >> $GITHUB_ENV
+          echo "VCPKG_TARGET_TRIPLET=arm64-android" >> $GITHUB_ENV
+        shell: bash
+
       - name: Build APK with Gradle
         working-directory: ./citron_source/src/android
         run: |
@@ -326,6 +345,25 @@ jobs:
           yes | sdkmanager --licenses > /dev/null || true
           sdkmanager "platform-tools" "platforms;android-34" "build-tools;34.0.0" "ndk;26.1.10909125"
           echo "ANDROID_NDK_HOME=$ANDROID_HOME/ndk/26.1.10909125" >> $GITHUB_ENV
+
+      - name: Bootstrap vcpkg and install OpenSSL (arm64-android)
+        run: |
+          set -euo pipefail
+          # 使用仓库内的 vcpkg（如果存在），否则克隆一个浅拷贝
+          VCPKG_DIR="./citron_source/externals/vcpkg"
+          if [ ! -d "$VCPKG_DIR" ]; then
+            mkdir -p ./citron_source/externals
+            git clone --depth=1 https://github.com/microsoft/vcpkg.git "$VCPKG_DIR"
+          fi
+          pushd "$VCPKG_DIR"
+          ./bootstrap-vcpkg.sh
+          # 为 Android arm64 三元组安装 OpenSSL
+          ./vcpkg install openssl:arm64-android
+          popd
+          # 导出 triplet 环境变量，供后续 CMake/Gradle 使用
+          echo "VCPKG_DEFAULT_TRIPLET=arm64-android" >> $GITHUB_ENV
+          echo "VCPKG_TARGET_TRIPLET=arm64-android" >> $GITHUB_ENV
+        shell: bash
 
       - name: Compile Android APK (Snapdragon 8 Elite)
         working-directory: ./citron_source/src/android
